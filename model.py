@@ -39,9 +39,9 @@ for features, label in training_data:
     X.append(features)
     y.append(label)
 
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.10, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
-x_train = tf.keras.utils.normalize(x_train, axis=1)  # scales data between 0 and 1
+x_train = tf.keras.utils.normalize(X, axis=1)  # scales data between 0 and 1
 x_test = tf.keras.utils.normalize(x_test, axis=1)  # scales data between 0 and 1
 
 
@@ -56,7 +56,7 @@ model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(x_train, y_train, epochs=3)
+model.fit(x_train, y, epochs=3)
 
 val_loss, val_acc = model.evaluate(x_test, y_test)
 print(val_loss)
