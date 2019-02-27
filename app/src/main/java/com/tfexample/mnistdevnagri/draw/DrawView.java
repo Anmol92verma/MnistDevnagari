@@ -12,10 +12,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-/**
- * Changed by marianne-linhares on 20/04/17.
- */
-
 public class DrawView extends View {
 
     private Paint mPaint = new Paint();
@@ -147,10 +143,14 @@ public class DrawView extends View {
         reset();
     }
 
+    public Bitmap getmOffscreenBitmap() {
+        return mOffscreenBitmap;
+    }
+
     /**
      * Get 28x28 pixel data for tensorflow input.
      */
-    public float[] getPixelData() {
+    public int[] getPixelData() {
         if (mOffscreenBitmap == null) {
             return null;
         }
@@ -162,12 +162,12 @@ public class DrawView extends View {
         int[] pixels = new int[width * height];
         mOffscreenBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
 
-        float[] retPixels = new float[pixels.length];
+        int[] retPixels = new int[pixels.length];
         for (int i = 0; i < pixels.length; ++i) {
             // Set 0 for white and 255 for black pixel
             int pix = pixels[i];
             int b = pix & 0xff;
-            retPixels[i] = (float)((0xff - b)/255.0);
+            retPixels[i] = b;
         }
         return retPixels;
     }

@@ -1,7 +1,5 @@
 package com.tfexample.mnistdevnagri.tflite;
 
-import android.graphics.Bitmap;
-
 import java.util.List;
 
 
@@ -65,7 +63,7 @@ public interface Classifier {
     }
 
 
-    List<Recognition> recognizeImage(Bitmap bitmap);
+    List<Recognition> recognizeImage(int[] bitmap);
 
     void close();
 }

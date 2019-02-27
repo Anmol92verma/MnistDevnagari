@@ -1,35 +1,95 @@
 package com.tfexample.mnistdevnagri;
 
 import android.app.Activity;
-//PointF holds two float coordinates
 import android.graphics.PointF;
-//A mapping from String keys to various Parcelable values (interface for data container values, parcels)
 import android.os.Bundle;
-//Object used to report movement (mouse, pen, finger, trackball) events.
-// //Motion events may hold either absolute or relative movements and other data, depending on the type of device.
+import android.support.v4.util.ArrayMap;
+import android.text.SpannableStringBuilder;
 import android.view.MotionEvent;
-//This class represents the basic building block for user interface components.
-// A View occupies a rectangular area on the screen and is responsible for drawing
 import android.view.View;
-//A user interface element the user can tap or click to perform an action.
 import android.widget.Button;
-//A user interface element that displays text to the user. To provide user-editable text, see EditText.
 import android.widget.TextView;
-//Resizable-array implementation of the List interface. Implements all optional list operations, and permits all elements,
-// including null. In addition to implementing the List interface, this class provides methods to
-// //manipulate the size of the array that is used internally to store the list.
-import java.util.ArrayList;
-// basic list
+import com.tfexample.mnistdevnagri.draw.DrawModel;
+import com.tfexample.mnistdevnagri.draw.DrawView;
+import com.tfexample.mnistdevnagri.tflite.Classifier;
+import com.tfexample.mnistdevnagri.tflite.TensorFlowImageClassifier;
+
+import java.io.IOException;
 import java.util.List;
-//encapsulates a classified image
-//public interface to the classification class, exposing a name and the recognize function
-import mariannelinhares.mnistandroid.models.Classifier;
-//contains logic for reading labels, creating classifier, and classifying
-import mariannelinhares.mnistandroid.models.TensorFlowClassifier;
-//class for drawing MNIST digits by finger
-import mariannelinhares.mnistandroid.views.DrawModel;
-//class for drawing the entire app
-import mariannelinhares.mnistandroid.views.DrawView;
+
+/**
+ * [[0, '/Users/anmolverma/ml/nhcd/consonants/32'],
+ * [1, '/Users/anmolverma/ml/nhcd/consonants/35'],
+ * [2, '/Users/anmolverma/ml/nhcd/consonants/34'],
+ * [3, '/Users/anmolverma/ml/nhcd/consonants/33'],
+ * [4, '/Users/anmolverma/ml/nhcd/consonants/20'],
+ * [5, '/Users/anmolverma/ml/nhcd/consonants/18'],
+ * [6, '/Users/anmolverma/ml/nhcd/consonants/27'],
+ * [7, '/Users/anmolverma/ml/nhcd/consonants/9'],
+ * [8, '/Users/anmolverma/ml/nhcd/consonants/11'],
+ * [9, '/Users/anmolverma/ml/nhcd/consonants/7'],
+ * [10, '/Users/anmolverma/ml/nhcd/consonants/29'],
+ * [11, '/Users/anmolverma/ml/nhcd/consonants/16'],
+ * [12, '/Users/anmolverma/ml/nhcd/consonants/6'],
+ * [13, '/Users/anmolverma/ml/nhcd/consonants/28'],
+ * [14, '/Users/anmolverma/ml/nhcd/consonants/17'],
+ * [15, '/Users/anmolverma/ml/nhcd/consonants/1'],
+ * [16, '/Users/anmolverma/ml/nhcd/consonants/10'],
+ * [17, '/Users/anmolverma/ml/nhcd/consonants/19'],
+ * [18, '/Users/anmolverma/ml/nhcd/consonants/26'],
+ * [19, '/Users/anmolverma/ml/nhcd/consonants/8'],
+ * [20, '/Users/anmolverma/ml/nhcd/consonants/21'],
+ * [21, '/Users/anmolverma/ml/nhcd/consonants/36'],
+ * [22, '/Users/anmolverma/ml/nhcd/consonants/31'],
+ * [23, '/Users/anmolverma/ml/nhcd/consonants/30'],
+ * [24, '/Users/anmolverma/ml/nhcd/consonants/24'],
+ * [25, '/Users/anmolverma/ml/nhcd/consonants/23'],
+ * [26, '/Users/anmolverma/ml/nhcd/consonants/4'],
+ * [27, '/Users/anmolverma/ml/nhcd/consonants/15'],
+ * [28, '/Users/anmolverma/ml/nhcd/consonants/3'],
+ * [29, '/Users/anmolverma/ml/nhcd/consonants/12'],
+ * [30, '/Users/anmolverma/ml/nhcd/consonants/2'],
+ * [31, '/Users/anmolverma/ml/nhcd/consonants/13'],
+ * [32, '/Users/anmolverma/ml/nhcd/consonants/5'],
+ * [33, '/Users/anmolverma/ml/nhcd/consonants/14'],
+ * [34, '/Users/anmolverma/ml/nhcd/consonants/22'],
+ * [35, '/Users/anmolverma/ml/nhcd/consonants/25'],
+ * [36, '/Users/anmolverma/ml/nhcd/numerals/9'],
+ * [37, '/Users/anmolverma/ml/nhcd/numerals/0'],
+ * [38, '/Users/anmolverma/ml/nhcd/numerals/7'],
+ * [39, '/Users/anmolverma/ml/nhcd/numerals/6'],
+ * [40, '/Users/anmolverma/ml/nhcd/numerals/1'],
+ * [41, '/Users/anmolverma/ml/nhcd/numerals/8'],
+ * [42, '/Users/anmolverma/ml/nhcd/numerals/4'],
+ * [43, '/Users/anmolverma/ml/nhcd/numerals/3'],
+ * [44, '/Users/anmolverma/ml/nhcd/numerals/2'],
+ * [45, '/Users/anmolverma/ml/nhcd/numerals/5'],
+ * [46, '/Users/anmolverma/ml/nhcd/vowels/9'],
+ * [47, '/Users/anmolverma/ml/nhcd/vowels/11'],
+ * [48, '/Users/anmolverma/ml/nhcd/vowels/7'],
+ * [49, '/Users/anmolverma/ml/nhcd/vowels/6'],
+ * [50, '/Users/anmolverma/ml/nhcd/vowels/1'],
+ * [51, '/Users/anmolverma/ml/nhcd/vowels/10'],
+ * [52, '/Users/anmolverma/ml/nhcd/vowels/8'],
+ * [53, '/Users/anmolverma/ml/nhcd/vowels/4'],
+ * [54, '/Users/anmolverma/ml/nhcd/vowels/3'],
+ * [55, '/Users/anmolverma/ml/nhcd/vowels/12'],
+ * [56, '/Users/anmolverma/ml/nhcd/vowels/2'],
+ * [57, '/Users/anmolverma/ml/nhcd/vowels/5']]
+ */
+
+/**
+ * [[0, '/Users/anmolverma/ml/nhcd/numerals/9'],
+ * [1, '/Users/anmolverma/ml/nhcd/numerals/0'],
+ * [2, '/Users/anmolverma/ml/nhcd/numerals/7'],
+ * [3, '/Users/anmolverma/ml/nhcd/numerals/6'],
+ * [4, '/Users/anmolverma/ml/nhcd/numerals/1'],
+ * [5, '/Users/anmolverma/ml/nhcd/numerals/8'],
+ * [6, '/Users/anmolverma/ml/nhcd/numerals/4'],
+ * [7, '/Users/anmolverma/ml/nhcd/numerals/3'],
+ * [8, '/Users/anmolverma/ml/nhcd/numerals/2'],
+ * [9, '/Users/anmolverma/ml/nhcd/numerals/5']]
+ */
 
 public class MainActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
 
@@ -38,8 +98,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     // ui elements
     private Button clearBtn, classBtn;
     private TextView resText;
-    private List<Classifier> mClassifiers = new ArrayList<>();
-
     // views
     private DrawModel drawModel;
     private DrawView drawView;
@@ -47,6 +105,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     private float mLastX;
     private float mLastY;
+    private Classifier classifier;
+    private ArrayMap<Integer, String> labelMap;
 
     @Override
     // In the onCreate() method, you perform basic application startup logic that should happen
@@ -55,6 +115,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         //initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        prepareLabels();
 
         //get drawing view from XML (where the finger writes the number)
         drawView = (DrawView) findViewById(R.id.draw);
@@ -82,7 +144,73 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         // tensorflow
         //load up our saved model to perform inference from local storage
-        loadModel();
+        try {
+            classifier = TensorFlowImageClassifier.create(getAssets(), "converted_model.tflite", "labels.txt", PIXEL_WIDTH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void prepareLabels() {
+        labelMap = new ArrayMap<Integer,String>();
+        labelMap.put(0, "Users/anmolverma/ml/nhcd/consonants/32");
+        labelMap.put(1, "Users/anmolverma/ml/nhcd/consonants/35");
+        labelMap.put(2, "Users/anmolverma/ml/nhcd/consonants/34");
+        labelMap.put(3, "Users/anmolverma/ml/nhcd/consonants/33");
+        labelMap.put(4, "Users/anmolverma/ml/nhcd/consonants/20");
+        labelMap.put(5, "Users/anmolverma/ml/nhcd/consonants/18");
+        labelMap.put(6, "Users/anmolverma/ml/nhcd/consonants/27");
+        labelMap.put(7, "Users/anmolverma/ml/nhcd/consonants/9");
+        labelMap.put(8, "Users/anmolverma/ml/nhcd/consonants/11");
+        labelMap.put(9, "Users/anmolverma/ml/nhcd/consonants/7");
+        labelMap.put(10, "Users/anmolverma/ml/nhcd/consonants/29");
+        labelMap.put(11, "Users/anmolverma/ml/nhcd/consonants/16");
+        labelMap.put(12, "Users/anmolverma/ml/nhcd/consonants/6");
+        labelMap.put(13, "Users/anmolverma/ml/nhcd/consonants/28");
+        labelMap.put(14, "Users/anmolverma/ml/nhcd/consonants/17");
+        labelMap.put(15, "Users/anmolverma/ml/nhcd/consonants/1");
+        labelMap.put(16, "Users/anmolverma/ml/nhcd/consonants/10");
+        labelMap.put(17, "Users/anmolverma/ml/nhcd/consonants/19");
+        labelMap.put(18, "Users/anmolverma/ml/nhcd/consonants/26");
+        labelMap.put(19, "Users/anmolverma/ml/nhcd/consonants/8");
+        labelMap.put(20, "Users/anmolverma/ml/nhcd/consonants/21");
+        labelMap.put(21, "Users/anmolverma/ml/nhcd/consonants/36");
+        labelMap.put(22, "Users/anmolverma/ml/nhcd/consonants/31");
+        labelMap.put(23, "Users/anmolverma/ml/nhcd/consonants/30");
+        labelMap.put(24, "Users/anmolverma/ml/nhcd/consonants/24");
+        labelMap.put(25, "Users/anmolverma/ml/nhcd/consonants/23");
+        labelMap.put(26, "Users/anmolverma/ml/nhcd/consonants/4");
+        labelMap.put(27, "Users/anmolverma/ml/nhcd/consonants/15");
+        labelMap.put(28, "Users/anmolverma/ml/nhcd/consonants/3");
+        labelMap.put(29, "Users/anmolverma/ml/nhcd/consonants/12");
+        labelMap.put(30, "Users/anmolverma/ml/nhcd/consonants/2");
+        labelMap.put(31, "Users/anmolverma/ml/nhcd/consonants/13");
+        labelMap.put(32, "Users/anmolverma/ml/nhcd/consonants/5");
+        labelMap.put(33, "Users/anmolverma/ml/nhcd/consonants/14");
+        labelMap.put(34, "Users/anmolverma/ml/nhcd/consonants/22");
+        labelMap.put(35, "Users/anmolverma/ml/nhcd/consonants/25");
+        labelMap.put(36, "Users/anmolverma/ml/nhcd/numerals/9");
+        labelMap.put(37, "Users/anmolverma/ml/nhcd/numerals/0");
+        labelMap.put(38, "Users/anmolverma/ml/nhcd/numerals/7");
+        labelMap.put(39, "Users/anmolverma/ml/nhcd/numerals/6");
+        labelMap.put(40, "Users/anmolverma/ml/nhcd/numerals/1");
+        labelMap.put(41, "Users/anmolverma/ml/nhcd/numerals/8");
+        labelMap.put(42, "Users/anmolverma/ml/nhcd/numerals/4");
+        labelMap.put(43, "Users/anmolverma/ml/nhcd/numerals/3");
+        labelMap.put(44, "Users/anmolverma/ml/nhcd/numerals/2");
+        labelMap.put(45, "Users/anmolverma/ml/nhcd/numerals/5");
+        labelMap.put(46, "Users/anmolverma/ml/nhcd/vowels/9");
+        labelMap.put(47, "Users/anmolverma/ml/nhcd/vowels/11");
+        labelMap.put(48, "Users/anmolverma/ml/nhcd/vowels/7");
+        labelMap.put(49, "Users/anmolverma/ml/nhcd/vowels/6");
+        labelMap.put(50, "Users/anmolverma/ml/nhcd/vowels/1");
+        labelMap.put(51, "Users/anmolverma/ml/nhcd/vowels/10");
+        labelMap.put(52, "Users/anmolverma/ml/nhcd/vowels/8");
+        labelMap.put(53, "Users/anmolverma/ml/nhcd/vowels/4");
+        labelMap.put(54, "Users/anmolverma/ml/nhcd/vowels/3");
+        labelMap.put(55, "Users/anmolverma/ml/nhcd/vowels/12");
+        labelMap.put(56, "Users/anmolverma/ml/nhcd/vowels/2");
+        labelMap.put(57, "Users/anmolverma/ml/nhcd/vowels/5");
     }
 
     //the activity lifecycle
@@ -102,34 +230,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         drawView.onPause();
         super.onPause();
     }
-    //creates a model object in memory using the saved tensorflow protobuf model file
-    //which contains all the learned weights
-    private void loadModel() {
-        //The Runnable interface is another way in which you can implement multi-threading other than extending the
-        // //Thread class due to the fact that Java allows you to extend only one class. Runnable is just an interface,
-        // //which provides the method run.
-        // //Threads are implementations and use Runnable to call the method run().
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //add 2 classifiers to our classifier arraylist
-                    //the tensorflow classifier and the keras classifier
-                    mClassifiers.add(
-                            TensorFlowClassifier.create(getAssets(), "TensorFlow",
-                                    "opt_mnist_convnet-tf.pb", "labels.txt", PIXEL_WIDTH,
-                                    "input", "output", true));
-                    mClassifiers.add(
-                            TensorFlowClassifier.create(getAssets(), "Keras",
-                                    "opt_mnist_convnet-keras.pb", "labels.txt", PIXEL_WIDTH,
-                                    "conv2d_1_input", "dense_2/Softmax", false));
-                } catch (final Exception e) {
-                    //if they aren't found, throw an error!
-                    throw new RuntimeException("Error initializing classifiers!", e);
-                }
-            }
-        }).start();
-    }
 
     @Override
     public void onClick(View view) {
@@ -145,24 +245,14 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         } else if (view.getId() == R.id.btn_class) {
             //if the user clicks the classify button
             //get the pixel data and store it in an array
-            float pixels[] = drawView.getPixelData();
-
-            //init an empty string to fill with the classification output
-            String text = "";
-            //for each classifier in our array
-            for (Classifier classifier : mClassifiers) {
-                //perform classification on the image
-                final Classification res = classifier.recognize(pixels);
-                //if it can't classify, output a question mark
-                if (res.getLabel() == null) {
-                    text += classifier.name() + ": ?\n";
-                } else {
-                    //else output its name
-                    text += String.format("%s: %s, %f\n", classifier.name(), res.getLabel(),
-                            res.getConf());
-                }
+            int[] pixels = drawView.getPixelData();
+            SpannableStringBuilder textToShow = new SpannableStringBuilder();
+            List<Classifier.Recognition> recog = classifier.recognizeImage(pixels);
+            for (int i = 0; i < recog.size(); i++) {
+                textToShow.append(recog.get(i).toString()+" "+labelMap.get(Integer.parseInt(recog.get(i).getId())));
+                textToShow.append("\n");
             }
-            resText.setText(text);
+            resText.setText(textToShow.toString());
         }
     }
 
@@ -232,4 +322,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private void processTouchUp() {
         drawModel.endLine();
     }
+
+
 }

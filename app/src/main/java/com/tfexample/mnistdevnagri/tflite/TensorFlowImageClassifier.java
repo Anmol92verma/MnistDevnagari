@@ -1,14 +1,10 @@
 package com.tfexample.mnistdevnagri.tflite;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
-
 import org.tensorflow.lite.Interpreter;
 
 import java.io.BufferedReader;
@@ -58,8 +54,8 @@ public class TensorFlowImageClassifier implements Classifier {
     }
 
     @Override
-    public List<Recognition> recognizeImage(Bitmap bitmap) {
-        ByteBuffer byteBuffer = convertBitmapToByteBuffer(bitmap);
+    public List<Recognition> recognizeImage(int[] bitmap) {
+        ByteBuffer byteBuffer = convertFloatArrToByteBuffer(bitmap);
         float[][] result = new float[1][labelList.size()];
 
         long startTime = SystemClock.uptimeMillis();
@@ -99,18 +95,16 @@ public class TensorFlowImageClassifier implements Classifier {
         return labelList;
     }
 
-    private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
+    private ByteBuffer convertFloatArrToByteBuffer(int[] bitmap) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * BATCH_SIZE * inputSize * inputSize * PIXEL_SIZE);
         byteBuffer.order(ByteOrder.nativeOrder());
-        int[] intValues = new int[inputSize * inputSize];
-        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
         int pixel = 0;
         for (int i = 0; i < inputSize; ++i) {
             for (int j = 0; j < inputSize; ++j) {
-                final int val = intValues[pixel++];
-                byteBuffer.putFloat((((val >> 16) & 0xFF)-IMAGE_MEAN)/IMAGE_STD);
-                byteBuffer.putFloat((((val >> 8) & 0xFF)-IMAGE_MEAN)/IMAGE_STD);
-                byteBuffer.putFloat((((val) & 0xFF)-IMAGE_MEAN)/IMAGE_STD);
+                final int pixelValue = bitmap[pixel++];
+                byteBuffer.putFloat((((pixelValue >> 16) & 0xFF)));
+                byteBuffer.putFloat((((pixelValue >> 8) & 0xFF)));
+                byteBuffer.putFloat(((pixelValue & 0xFF)));
             }
         }
         return byteBuffer;
@@ -148,6 +142,28 @@ public class TensorFlowImageClassifier implements Classifier {
         }
 
         return recognitions;
+    }
+
+    public Object[] argmax(float[] array) {
+
+
+        int best = -1;
+        float best_confidence = 0.0f;
+
+        for (int i = 0; i < array.length; i++) {
+
+            float value = array[i];
+
+            if (value > best_confidence) {
+
+                best_confidence = value;
+                best = i;
+            }
+        }
+
+        return new Object[]{best, best_confidence};
+
+
     }
 
 }

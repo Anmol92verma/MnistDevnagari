@@ -1,17 +1,11 @@
 package com.tfexample.mnistdevnagri.draw;
 
 import android.graphics.Canvas;
-//The Color class provides methods for creating, converting and manipulating colors.
 import android.graphics.Color;
-//The Paint class holds the style and color information about how to draw geometries, text and bitmaps.
 import android.graphics.Paint;
 
-import mariannelinhares.mnistandroid.views.DrawModel;
-
-/**
- * Changed by marianne-linhares on 21/04/17.
- * https://raw.githubusercontent.com/miyosuda/TensorFlowAndroidMNIST/master/app/src/main/java/jp/narr/tensorflowmnist/DrawRenderer.java
- */
+//The Color class provides methods for creating, converting and manipulating colors.
+//The Paint class holds the style and color information about how to draw geometries, text and bitmaps.
 
 public class DrawRenderer {
     /**
