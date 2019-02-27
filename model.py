@@ -26,11 +26,9 @@ def load_data():
             NUMBER_OF_PREDICTIONS += 1
             for subdir in os.listdir(path):
                 img = os.path.join(path, subdir)
-                img_array = cv2.imread(img)
+                img_array = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
                 new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
                 training_data.append([new_array, class_num])
-
-
 
 
 load_data()
@@ -41,23 +39,17 @@ for features, label in training_data:
     X.append(features)
     y.append(label)
 
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.10, random_state=42)
+
 x_train = tf.keras.utils.normalize(x_train, axis=1)  # scales data between 0 and 1
 x_test = tf.keras.utils.normalize(x_test, axis=1)  # scales data between 0 and 1
 
-x_train = x_train.reshape(x_train.shape[0], IMG_SIZE, IMG_SIZE, 3)
-x_test = x_test.reshape(x_test.shape[0], IMG_SIZE, IMG_SIZE, 3)
-
-print('x_train shape:', x_train.shape)
-print('Number of images in x_train', x_train.shape[0])
-print('Number of images in x_test', x_test.shape[0])
 
 model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Conv2D(IMG_SIZE, kernel_size=(3, 3), input_shape=(IMG_SIZE, IMG_SIZE, 3)))
-model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-model.add(tf.keras.layers.Flatten())  # Flattening the 2D arrays for fully connected layers
+model.add(tf.keras.layers.Flatten(input_shape=(IMG_SIZE, IMG_SIZE)))  # Flattening the 2D arrays for fully connected layers
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
-model.add(tf.keras.layers.Dropout(0.2))
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
 model.add(tf.keras.layers.Dense(NUMBER_OF_PREDICTIONS, activation=tf.nn.softmax))
 
 model.compile(optimizer='adam',
@@ -77,7 +69,7 @@ print("predictions " + str(predictions))
 print(predictions[0])
 print("predictions label " + str(np.argmax(predictions[0])))
 print(keymap)
-
+plt.imshow(x_test[0],cmap="gray")
 # Convert to TensorFlow Lite model.
 converter = tf.contrib.lite.TFLiteConverter.from_keras_model_file(keras_file)
 tflite_model = converter.convert()
