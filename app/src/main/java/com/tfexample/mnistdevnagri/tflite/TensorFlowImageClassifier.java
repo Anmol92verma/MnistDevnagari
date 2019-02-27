@@ -26,7 +26,7 @@ public class TensorFlowImageClassifier implements Classifier {
 
     private static final int MAX_RESULTS = 3;
     private static final int BATCH_SIZE = 1;
-    private static final int PIXEL_SIZE = 3;
+    private static final int PIXEL_SIZE = 1;
     private static final float THRESHOLD = 0.1f;
 
     private static final int IMAGE_MEAN = 128;
@@ -102,9 +102,9 @@ public class TensorFlowImageClassifier implements Classifier {
         for (int i = 0; i < inputSize; ++i) {
             for (int j = 0; j < inputSize; ++j) {
                 final int pixelValue = bitmap[pixel++];
-                byteBuffer.putFloat((((pixelValue >> 16) & 0xFF)));
-                byteBuffer.putFloat((((pixelValue >> 8) & 0xFF)));
-                byteBuffer.putFloat(((pixelValue & 0xFF)));
+                //byteBuffer.putFloat((((pixelValue >> 16) & 0xFF)));
+                //byteBuffer.putFloat((((pixelValue >> 8) & 0xFF)));
+                byteBuffer.putFloat(pixelValue);
             }
         }
         return byteBuffer;

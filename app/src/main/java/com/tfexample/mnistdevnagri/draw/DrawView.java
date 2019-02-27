@@ -41,7 +41,7 @@ public class DrawView extends View {
     public void reset() {
         mDrawnLineSize = 0;
         if (mOffscreenBitmap != null) {
-            mPaint.setColor(Color.WHITE);
+            mPaint.setColor(Color.BLACK);
             int width = mOffscreenBitmap.getWidth();
             int height = mOffscreenBitmap.getHeight();
             mOffscreenCanvas.drawRect(new Rect(0, 0, width, height), mPaint);

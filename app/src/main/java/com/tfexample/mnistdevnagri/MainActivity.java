@@ -17,83 +17,9 @@ import com.tfexample.mnistdevnagri.tflite.TensorFlowImageClassifier;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * [[0, '/Users/anmolverma/ml/nhcd/consonants/32'],
- * [1, '/Users/anmolverma/ml/nhcd/consonants/35'],
- * [2, '/Users/anmolverma/ml/nhcd/consonants/34'],
- * [3, '/Users/anmolverma/ml/nhcd/consonants/33'],
- * [4, '/Users/anmolverma/ml/nhcd/consonants/20'],
- * [5, '/Users/anmolverma/ml/nhcd/consonants/18'],
- * [6, '/Users/anmolverma/ml/nhcd/consonants/27'],
- * [7, '/Users/anmolverma/ml/nhcd/consonants/9'],
- * [8, '/Users/anmolverma/ml/nhcd/consonants/11'],
- * [9, '/Users/anmolverma/ml/nhcd/consonants/7'],
- * [10, '/Users/anmolverma/ml/nhcd/consonants/29'],
- * [11, '/Users/anmolverma/ml/nhcd/consonants/16'],
- * [12, '/Users/anmolverma/ml/nhcd/consonants/6'],
- * [13, '/Users/anmolverma/ml/nhcd/consonants/28'],
- * [14, '/Users/anmolverma/ml/nhcd/consonants/17'],
- * [15, '/Users/anmolverma/ml/nhcd/consonants/1'],
- * [16, '/Users/anmolverma/ml/nhcd/consonants/10'],
- * [17, '/Users/anmolverma/ml/nhcd/consonants/19'],
- * [18, '/Users/anmolverma/ml/nhcd/consonants/26'],
- * [19, '/Users/anmolverma/ml/nhcd/consonants/8'],
- * [20, '/Users/anmolverma/ml/nhcd/consonants/21'],
- * [21, '/Users/anmolverma/ml/nhcd/consonants/36'],
- * [22, '/Users/anmolverma/ml/nhcd/consonants/31'],
- * [23, '/Users/anmolverma/ml/nhcd/consonants/30'],
- * [24, '/Users/anmolverma/ml/nhcd/consonants/24'],
- * [25, '/Users/anmolverma/ml/nhcd/consonants/23'],
- * [26, '/Users/anmolverma/ml/nhcd/consonants/4'],
- * [27, '/Users/anmolverma/ml/nhcd/consonants/15'],
- * [28, '/Users/anmolverma/ml/nhcd/consonants/3'],
- * [29, '/Users/anmolverma/ml/nhcd/consonants/12'],
- * [30, '/Users/anmolverma/ml/nhcd/consonants/2'],
- * [31, '/Users/anmolverma/ml/nhcd/consonants/13'],
- * [32, '/Users/anmolverma/ml/nhcd/consonants/5'],
- * [33, '/Users/anmolverma/ml/nhcd/consonants/14'],
- * [34, '/Users/anmolverma/ml/nhcd/consonants/22'],
- * [35, '/Users/anmolverma/ml/nhcd/consonants/25'],
- * [36, '/Users/anmolverma/ml/nhcd/numerals/9'],
- * [37, '/Users/anmolverma/ml/nhcd/numerals/0'],
- * [38, '/Users/anmolverma/ml/nhcd/numerals/7'],
- * [39, '/Users/anmolverma/ml/nhcd/numerals/6'],
- * [40, '/Users/anmolverma/ml/nhcd/numerals/1'],
- * [41, '/Users/anmolverma/ml/nhcd/numerals/8'],
- * [42, '/Users/anmolverma/ml/nhcd/numerals/4'],
- * [43, '/Users/anmolverma/ml/nhcd/numerals/3'],
- * [44, '/Users/anmolverma/ml/nhcd/numerals/2'],
- * [45, '/Users/anmolverma/ml/nhcd/numerals/5'],
- * [46, '/Users/anmolverma/ml/nhcd/vowels/9'],
- * [47, '/Users/anmolverma/ml/nhcd/vowels/11'],
- * [48, '/Users/anmolverma/ml/nhcd/vowels/7'],
- * [49, '/Users/anmolverma/ml/nhcd/vowels/6'],
- * [50, '/Users/anmolverma/ml/nhcd/vowels/1'],
- * [51, '/Users/anmolverma/ml/nhcd/vowels/10'],
- * [52, '/Users/anmolverma/ml/nhcd/vowels/8'],
- * [53, '/Users/anmolverma/ml/nhcd/vowels/4'],
- * [54, '/Users/anmolverma/ml/nhcd/vowels/3'],
- * [55, '/Users/anmolverma/ml/nhcd/vowels/12'],
- * [56, '/Users/anmolverma/ml/nhcd/vowels/2'],
- * [57, '/Users/anmolverma/ml/nhcd/vowels/5']]
- */
-
-/**
- * [[0, '/Users/anmolverma/ml/nhcd/numerals/9'],
- * [1, '/Users/anmolverma/ml/nhcd/numerals/0'],
- * [2, '/Users/anmolverma/ml/nhcd/numerals/7'],
- * [3, '/Users/anmolverma/ml/nhcd/numerals/6'],
- * [4, '/Users/anmolverma/ml/nhcd/numerals/1'],
- * [5, '/Users/anmolverma/ml/nhcd/numerals/8'],
- * [6, '/Users/anmolverma/ml/nhcd/numerals/4'],
- * [7, '/Users/anmolverma/ml/nhcd/numerals/3'],
- * [8, '/Users/anmolverma/ml/nhcd/numerals/2'],
- * [9, '/Users/anmolverma/ml/nhcd/numerals/5']]
- */
-
 public class MainActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
 
-    private static final int PIXEL_WIDTH = 28;
+    private static final int PIXEL_WIDTH = 32;
 
     // ui elements
     private Button clearBtn, classBtn;
@@ -152,65 +78,53 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     }
 
     private void prepareLabels() {
-        labelMap = new ArrayMap<Integer,String>();
-        labelMap.put(0, "Users/anmolverma/ml/nhcd/consonants/32");
-        labelMap.put(1, "Users/anmolverma/ml/nhcd/consonants/35");
-        labelMap.put(2, "Users/anmolverma/ml/nhcd/consonants/34");
-        labelMap.put(3, "Users/anmolverma/ml/nhcd/consonants/33");
-        labelMap.put(4, "Users/anmolverma/ml/nhcd/consonants/20");
-        labelMap.put(5, "Users/anmolverma/ml/nhcd/consonants/18");
-        labelMap.put(6, "Users/anmolverma/ml/nhcd/consonants/27");
-        labelMap.put(7, "Users/anmolverma/ml/nhcd/consonants/9");
-        labelMap.put(8, "Users/anmolverma/ml/nhcd/consonants/11");
-        labelMap.put(9, "Users/anmolverma/ml/nhcd/consonants/7");
-        labelMap.put(10, "Users/anmolverma/ml/nhcd/consonants/29");
-        labelMap.put(11, "Users/anmolverma/ml/nhcd/consonants/16");
-        labelMap.put(12, "Users/anmolverma/ml/nhcd/consonants/6");
-        labelMap.put(13, "Users/anmolverma/ml/nhcd/consonants/28");
-        labelMap.put(14, "Users/anmolverma/ml/nhcd/consonants/17");
-        labelMap.put(15, "Users/anmolverma/ml/nhcd/consonants/1");
-        labelMap.put(16, "Users/anmolverma/ml/nhcd/consonants/10");
-        labelMap.put(17, "Users/anmolverma/ml/nhcd/consonants/19");
-        labelMap.put(18, "Users/anmolverma/ml/nhcd/consonants/26");
-        labelMap.put(19, "Users/anmolverma/ml/nhcd/consonants/8");
-        labelMap.put(20, "Users/anmolverma/ml/nhcd/consonants/21");
-        labelMap.put(21, "Users/anmolverma/ml/nhcd/consonants/36");
-        labelMap.put(22, "Users/anmolverma/ml/nhcd/consonants/31");
-        labelMap.put(23, "Users/anmolverma/ml/nhcd/consonants/30");
-        labelMap.put(24, "Users/anmolverma/ml/nhcd/consonants/24");
-        labelMap.put(25, "Users/anmolverma/ml/nhcd/consonants/23");
-        labelMap.put(26, "Users/anmolverma/ml/nhcd/consonants/4");
-        labelMap.put(27, "Users/anmolverma/ml/nhcd/consonants/15");
-        labelMap.put(28, "Users/anmolverma/ml/nhcd/consonants/3");
-        labelMap.put(29, "Users/anmolverma/ml/nhcd/consonants/12");
-        labelMap.put(30, "Users/anmolverma/ml/nhcd/consonants/2");
-        labelMap.put(31, "Users/anmolverma/ml/nhcd/consonants/13");
-        labelMap.put(32, "Users/anmolverma/ml/nhcd/consonants/5");
-        labelMap.put(33, "Users/anmolverma/ml/nhcd/consonants/14");
-        labelMap.put(34, "Users/anmolverma/ml/nhcd/consonants/22");
-        labelMap.put(35, "Users/anmolverma/ml/nhcd/consonants/25");
-        labelMap.put(36, "Users/anmolverma/ml/nhcd/numerals/9");
-        labelMap.put(37, "Users/anmolverma/ml/nhcd/numerals/0");
-        labelMap.put(38, "Users/anmolverma/ml/nhcd/numerals/7");
-        labelMap.put(39, "Users/anmolverma/ml/nhcd/numerals/6");
-        labelMap.put(40, "Users/anmolverma/ml/nhcd/numerals/1");
-        labelMap.put(41, "Users/anmolverma/ml/nhcd/numerals/8");
-        labelMap.put(42, "Users/anmolverma/ml/nhcd/numerals/4");
-        labelMap.put(43, "Users/anmolverma/ml/nhcd/numerals/3");
-        labelMap.put(44, "Users/anmolverma/ml/nhcd/numerals/2");
-        labelMap.put(45, "Users/anmolverma/ml/nhcd/numerals/5");
-        labelMap.put(46, "Users/anmolverma/ml/nhcd/vowels/9");
-        labelMap.put(47, "Users/anmolverma/ml/nhcd/vowels/11");
-        labelMap.put(48, "Users/anmolverma/ml/nhcd/vowels/7");
-        labelMap.put(49, "Users/anmolverma/ml/nhcd/vowels/6");
-        labelMap.put(50, "Users/anmolverma/ml/nhcd/vowels/1");
-        labelMap.put(51, "Users/anmolverma/ml/nhcd/vowels/10");
-        labelMap.put(52, "Users/anmolverma/ml/nhcd/vowels/8");
-        labelMap.put(53, "Users/anmolverma/ml/nhcd/vowels/4");
-        labelMap.put(54, "Users/anmolverma/ml/nhcd/vowels/3");
-        labelMap.put(55, "Users/anmolverma/ml/nhcd/vowels/12");
-        labelMap.put(56, "Users/anmolverma/ml/nhcd/vowels/2");
-        labelMap.put(57, "Users/anmolverma/ml/nhcd/vowels/5");
+        labelMap = new ArrayMap<>();
+        labelMap.put(0, "/Users/anmolverma/ml/Images/character_06_cha");
+        labelMap.put(1, "/Users/anmolverma/ml/Images/character_04_gha");
+        labelMap.put(2, "/Users/anmolverma/ml/Images/character_08_ja");
+        labelMap.put(3, "/Users/anmolverma/ml/Images/character_29_waw");
+        labelMap.put(4, "/Users/anmolverma/ml/Images/character_05_kna");
+        labelMap.put(5, "/Users/anmolverma/ml/Images/character_32_patalosaw");
+        labelMap.put(6, "/Users/anmolverma/ml/Images/character_03_ga");
+        labelMap.put(7, "/Users/anmolverma/ml/Images/character_24_bha");
+        labelMap.put(8, "/Users/anmolverma/ml/Images/character_12_thaa");
+        labelMap.put(9, "/Users/anmolverma/ml/Images/character_22_pha");
+        labelMap.put(10, "/Users/anmolverma/ml/Images/character_10_yna");
+        labelMap.put(11, "/Users/anmolverma/ml/Images/character_27_ra");
+        labelMap.put(12, "/Users/anmolverma/ml/Images/character_13_daa");
+        labelMap.put(13, "/Users/anmolverma/ml/Images/character_01_ka");
+        labelMap.put(14, "/Users/anmolverma/ml/Images/digit_2");
+        labelMap.put(15, "/Users/anmolverma/ml/Images/character_21_pa");
+        labelMap.put(16, "/Users/anmolverma/ml/Images/digit_5");
+        labelMap.put(17, "/Users/anmolverma/ml/Images/digit_4");
+        labelMap.put(18, "/Users/anmolverma/ml/Images/digit_3");
+        labelMap.put(19, "/Users/anmolverma/ml/Images/character_18_da");
+        labelMap.put(20, "/Users/anmolverma/ml/Images/character_28_la");
+        labelMap.put(21, "/Users/anmolverma/ml/Images/character_19_dha");
+        labelMap.put(22, "/Users/anmolverma/ml/Images/character_23_ba");
+        labelMap.put(23, "/Users/anmolverma/ml/Images/character_33_ha");
+        labelMap.put(24, "/Users/anmolverma/ml/Images/character_07_chha");
+        labelMap.put(25, "/Users/anmolverma/ml/Images/character_34_chhya");
+        labelMap.put(26, "/Users/anmolverma/ml/Images/character_09_jha");
+        labelMap.put(27, "/Users/anmolverma/ml/Images/character_02_kha");
+        labelMap.put(28, "/Users/anmolverma/ml/Images/character_11_taamatar");
+        labelMap.put(29, "/Users/anmolverma/ml/Images/character_25_ma");
+        labelMap.put(30, "/Users/anmolverma/ml/Images/character_30_motosaw");
+        labelMap.put(31, "/Users/anmolverma/ml/Images/character_17_tha");
+        labelMap.put(32, "/Users/anmolverma/ml/Images/character_35_tra");
+        labelMap.put(33, "/Users/anmolverma/ml/Images/character_36_gya");
+        labelMap.put(34, "/Users/anmolverma/ml/Images/character_31_petchiryakha");
+        labelMap.put(35, "/Users/anmolverma/ml/Images/character_15_adna");
+        labelMap.put(36, "/Users/anmolverma/ml/Images/character_14_dhaa");
+        labelMap.put(37, "/Users/anmolverma/ml/Images/character_16_tabala");
+        labelMap.put(38, "/Users/anmolverma/ml/Images/digit_6");
+        labelMap.put(39, "/Users/anmolverma/ml/Images/digit_1");
+        labelMap.put(40, "/Users/anmolverma/ml/Images/digit_8");
+        labelMap.put(41, "/Users/anmolverma/ml/Images/character_20_na");
+        labelMap.put(42, "/Users/anmolverma/ml/Images/character_26_yaw");
+        labelMap.put(43, "/Users/anmolverma/ml/Images/digit_9");
+        labelMap.put(44, "/Users/anmolverma/ml/Images/digit_0");
+        labelMap.put(45, "/Users/anmolverma/ml/Images/digit_7");
     }
 
     //the activity lifecycle
@@ -249,7 +163,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             SpannableStringBuilder textToShow = new SpannableStringBuilder();
             List<Classifier.Recognition> recog = classifier.recognizeImage(pixels);
             for (int i = 0; i < recog.size(); i++) {
-                textToShow.append(recog.get(i).toString()+" "+labelMap.get(Integer.parseInt(recog.get(i).getId())));
+                textToShow.append(recog.get(i).toString() + " " + labelMap.get(Integer.parseInt(recog.get(i).getId())));
                 textToShow.append("\n");
             }
             resText.setText(textToShow.toString());
